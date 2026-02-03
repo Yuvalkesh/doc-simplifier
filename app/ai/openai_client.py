@@ -31,7 +31,9 @@ class OpenAIClient:
                         {"role": "user", "content": f"Docs:\n{content}\n\n---\n{SECTION_PROMPTS[name]}"}
                     ],
                     temperature=0.7, max_tokens=500
-                ), timeout=25.0)
+                ), timeout=55.0)
             return r.choices[0].message.content.strip()
         except asyncio.TimeoutError:
             return "⏱️ Timed out"
+        except Exception as e:
+            return f"⚠️ {type(e).__name__}: {str(e)[:100]}"
