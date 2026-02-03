@@ -25,7 +25,7 @@ class DocumentationCrawler:
                 resp.raise_for_status()
                 if "text/html" not in resp.headers.get("content-type", ""):
                     return
-                soup = BeautifulSoup(resp.text, "lxml")
+                soup = BeautifulSoup(resp.text, "html.parser")
                 title = soup.title.string if soup.title else (soup.find("h1").get_text(strip=True) if soup.find("h1") else "")
                 content = self._extract(soup)
                 if content and len(content) > 100:
