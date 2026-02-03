@@ -1,0 +1,1 @@
+# Documentation Simplifier App

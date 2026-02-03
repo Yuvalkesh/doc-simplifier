@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Analyzing - API Analyzer{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+    <div class="bg-gray-900 rounded-2xl border border-gray-800 p-8 text-center">
+        <!-- Animated Icon -->
+        <div class="mb-8">
+            <div class="w-20 h-20 mx-auto relative">
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full opacity-20 animate-ping"></div>
+                <div class="relative w-20 h-20 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center">
+                    <svg class="w-10 h-10 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-2xl font-bold text-white mb-2">Analyzing for Your Platform</h1>
+        <p class="text-gray-400 mb-8" id="progress-message">{{ report.progress_message or 'Starting...' }}</p>
+
+        <!-- Progress Bar -->
+        <div class="mb-6">
+            <div class="w-full bg-gray-800 rounded-full h-3">
+                <div id="progress-bar"
+                     class="bg-gradient-to-r from-purple-600 to-indigo-600 h-3 rounded-full transition-all duration-500"
+                     style="width: {{ report.progress or 0 }}%">
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">
+                <span id="progress-percent">{{ report.progress or 0 }}</span>% complete
+            </p>
+        </div>
+
+        <!-- URL being processed -->
+        <div class="bg-gray-800 rounded-lg p-4 mb-8">
+            <p class="text-xs text-gray-500 mb-1">Analyzing</p>
+            <p class="text-sm text-gray-300 font-mono truncate">{{ report.url }}</p>
+        </div>
+
+        <!-- Steps -->
+        <div class="text-left">
+            <div class="space-y-3">
+                <div class="flex items-center" id="step-crawl">
+                    <div class="step-icon w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center mr-3">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                        </svg>
+                    </div>
+                    <span class="text-gray-400">Crawling documentation pages</span>
+                </div>
+                <div class="flex items-center" id="step-process">
+                    <div class="step-icon w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center mr-3">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                        </svg>
+                    </div>
+                    <span class="text-gray-400">Processing content</span>
+                </div>
+                <div class="flex items-center" id="step-ai">
+                    <div class="step-icon w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center mr-3">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-gray-400">AI analysis for your platform</span>
+                </div>
+                <div class="flex items-center" id="step-report">
+                    <div class="step-icon w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center mr-3">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-gray-400">Generating platform insights</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const reportId = {{ report.id }};
+
+    function updateStep(stepId, status) {
+        const step = document.getElementById(stepId);
+        const icon = step.querySelector('.step-icon');
+
+        if (status === 'active') {
+            icon.classList.remove('bg-gray-800', 'bg-green-500/20');
+            icon.classList.add('bg-purple-500/20');
+            icon.querySelector('svg').classList.remove('text-gray-500', 'text-green-400');
+            icon.querySelector('svg').classList.add('text-purple-400');
+        } else if (status === 'complete') {
+            icon.classList.remove('bg-gray-800', 'bg-purple-500/20');
+            icon.classList.add('bg-green-500/20');
+            icon.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+        }
+    }
+
+    function updateProgress(progress, message) {
+        document.getElementById('progress-bar').style.width = progress + '%';
+        document.getElementById('progress-percent').textContent = progress;
+        document.getElementById('progress-message').textContent = message;
+
+        if (progress >= 10) updateStep('step-crawl', 'active');
+        if (progress >= 40) {
+            updateStep('step-crawl', 'complete');
+            updateStep('step-process', 'active');
+        }
+        if (progress >= 50) {
+            updateStep('step-process', 'complete');
+            updateStep('step-ai', 'active');
+        }
+        if (progress >= 90) {
+            updateStep('step-ai', 'complete');
+            updateStep('step-report', 'active');
+        }
+        if (progress >= 100) {
+            updateStep('step-report', 'complete');
+        }
+    }
+
+    async function checkStatus() {
+        try {
+            const response = await fetch(`/api/status/${reportId}`);
+            const data = await response.json();
+
+            updateProgress(data.progress, data.progress_message);
+
+            if (data.status === 'complete') {
+                window.location.href = `/report/${reportId}`;
+            } else if (data.status === 'failed') {
+                document.getElementById('progress-message').textContent = 'Error: ' + (data.error || 'Processing failed');
+                document.getElementById('progress-message').classList.add('text-red-400');
+            } else {
+                setTimeout(checkStatus, 2000);
+            }
+        } catch (error) {
+            console.error('Error checking status:', error);
+            setTimeout(checkStatus, 3000);
+        }
+    }
+
+    checkStatus();
+</script>
+{% endblock %}

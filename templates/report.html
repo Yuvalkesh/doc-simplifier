@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}{{ report.title or 'Report' }} - Doc Simplifier{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 rounded-2xl p-6 mb-6 text-white">
+        <div class="flex items-center gap-3 mb-2">
+            <span class="text-3xl">📚</span>
+            <h1 class="text-2xl font-bold">{{ report.title or 'Documentation Simplified' }}</h1>
+        </div>
+        <p class="text-purple-100 text-sm opacity-80 truncate">{{ report.url }}</p>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="bg-gray-900 rounded-xl border border-gray-800 mb-6 overflow-hidden">
+        <div class="flex overflow-x-auto scrollbar-hide border-b border-gray-800" id="tab-nav">
+            <button onclick="showTab('tldr')" data-tab="tldr" class="tab-btn active flex-shrink-0 px-5 py-3 text-sm font-medium text-white bg-purple-600">
+                ⚡ TL;DR
+            </button>
+            <button onclick="showTab('superpowers')" data-tab="superpowers" class="tab-btn flex-shrink-0 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                💪 What You Can Do
+            </button>
+            <button onclick="showTab('quick_start')" data-tab="quick_start" class="tab-btn flex-shrink-0 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                🏁 Quick Start
+            </button>
+            <button onclick="showTab('video_magic')" data-tab="video_magic" class="tab-btn flex-shrink-0 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                💡 Use Cases
+            </button>
+            <button onclick="showTab('viral_features')" data-tab="viral_features" class="tab-btn flex-shrink-0 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                ✨ Best Features
+            </button>
+            <button onclick="showTab('money_talk')" data-tab="money_talk" class="tab-btn flex-shrink-0 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                💰 Pricing
+            </button>
+            <button onclick="showTab('watch_out')" data-tab="watch_out" class="tab-btn flex-shrink-0 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                ⚠️ Watch Out
+            </button>
+            <button onclick="showTab('ship_today')" data-tab="ship_today" class="tab-btn flex-shrink-0 px-5 py-3 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                🚀 Try Today
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="p-6 min-h-[300px]">
+            <div id="tab-tldr" class="tab-content">
+                <div class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-6">
+                    <div class="text-lg text-gray-200 leading-relaxed rendered-content" id="content-tldr"></div>
+                </div>
+            </div>
+
+            <div id="tab-superpowers" class="tab-content hidden">
+                <div class="space-y-4 rendered-content" id="content-superpowers"></div>
+            </div>
+
+            <div id="tab-quick_start" class="tab-content hidden">
+                <div class="bg-gray-800/50 rounded-xl p-6 rendered-content" id="content-quick_start"></div>
+            </div>
+
+            <div id="tab-video_magic" class="tab-content hidden">
+                <div class="space-y-4 rendered-content" id="content-video_magic"></div>
+            </div>
+
+            <div id="tab-viral_features" class="tab-content hidden">
+                <div class="space-y-4 rendered-content" id="content-viral_features"></div>
+            </div>
+
+            <div id="tab-money_talk" class="tab-content hidden">
+                <div class="bg-green-500/5 border border-green-500/20 rounded-xl p-6 rendered-content" id="content-money_talk"></div>
+            </div>
+
+            <div id="tab-watch_out" class="tab-content hidden">
+                <div class="bg-yellow-500/5 border border-yellow-500/20 rounded-xl p-6 rendered-content" id="content-watch_out"></div>
+            </div>
+
+            <div id="tab-ship_today" class="tab-content hidden">
+                <div class="bg-blue-500/5 border border-blue-500/20 rounded-xl p-6 rendered-content" id="content-ship_today"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-wrap gap-3">
+        <a href="{{ report.url }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:bg-gray-700 transition-colors">
+            📄 Original Docs
+        </a>
+        <button onclick="copyAll()" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-sm text-gray-300 hover:bg-gray-700 transition-colors">
+            📋 Copy All
+        </button>
+        <a href="/" class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-sm text-white transition-colors">
+            ✨ Simplify Another
+        </a>
+    </div>
+</div>
+
+<style>
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+.rendered-content {
+    color: #e5e7eb;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+.rendered-content p {
+    margin-bottom: 1rem;
+}
+.rendered-content strong {
+    color: #fff;
+    font-weight: 600;
+    background: linear-gradient(to right, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2));
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+}
+.rendered-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+.rendered-content li {
+    margin-bottom: 1rem;
+    padding-left: 0;
+}
+.rendered-content code {
+    background: rgba(139, 92, 246, 0.2);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #c4b5fd;
+}
+.rendered-content a {
+    color: #a78bfa;
+    text-decoration: underline;
+}
+.rendered-content h3, .rendered-content h4 {
+    color: #fff;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+@media print {
+    .tab-content { display: block !important; page-break-inside: avoid; }
+    .tab-btn, button, a, nav, footer { display: none !important; }
+    .bg-gray-900 { background: white !important; }
+    .text-gray-200, .text-gray-300 { color: black !important; }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const rawContent = {
+    tldr: {{ report.report_data.tldr | tojson | default('""') | safe }},
+    superpowers: {{ report.report_data.superpowers | tojson | default('""') | safe }},
+    quick_start: {{ report.report_data.quick_start | tojson | default('""') | safe }},
+    video_magic: {{ report.report_data.video_magic | tojson | default('""') | safe }},
+    viral_features: {{ report.report_data.viral_features | tojson | default('""') | safe }},
+    money_talk: {{ report.report_data.money_talk | tojson | default('""') | safe }},
+    watch_out: {{ report.report_data.watch_out | tojson | default('""') | safe }},
+    ship_today: {{ report.report_data.ship_today | tojson | default('""') | safe }}
+};
+
+function renderMarkdown(text) {
+    if (!text) return '<p class="text-gray-500">No content available</p>';
+
+    let html = text
+        // Escape HTML first
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        // Bold **text** or __text__
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/__(.+?)__/g, '<strong>$1</strong>')
+        // Italic *text* (but not **)
+        .replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g, '<em>$1</em>')
+        // Code `text`
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        // Links [text](url)
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+        // Headers ### text
+        .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+        // Bullet points - or * at start of line
+        .replace(/^[-*] (.+)$/gm, '<li>$1</li>')
+        // Numbered lists
+        .replace(/^\d+[.)] (.+)$/gm, '<li>$1</li>')
+        // Emoji bullets (🎯, 💡, etc)
+        .replace(/^([🎯💡✨🔥⚡💪🏁💰⚠️🚀📎📋✅❌]) (.+)$/gm, '<li>$1 $2</li>')
+        // Double newlines = paragraph break
+        .replace(/\n\n+/g, '</p><p>')
+        // Single newlines in lists
+        .replace(/\n/g, '<br>');
+
+    // Wrap in paragraph if not starting with special element
+    if (!html.startsWith('<')) {
+        html = '<p>' + html + '</p>';
+    }
+
+    // Clean up empty paragraphs
+    html = html.replace(/<p><\/p>/g, '');
+    html = html.replace(/<p><br>/g, '<p>');
+    html = html.replace(/<br><\/p>/g, '</p>');
+
+    // Wrap consecutive li elements in ul
+    html = html.replace(/(<li>[\s\S]*?<\/li>)+/g, '<ul>$&</ul>');
+
+    return html;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    Object.keys(rawContent).forEach(key => {
+        const el = document.getElementById('content-' + key);
+        if (el) {
+            el.innerHTML = renderMarkdown(rawContent[key]);
+        }
+    });
+});
+
+function showTab(tabName) {
+    // Hide all
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('active', 'text-white', 'bg-purple-600');
+        el.classList.add('text-gray-400');
+    });
+
+    // Show selected
+    document.getElementById('tab-' + tabName).classList.remove('hidden');
+    const btn = document.querySelector(`[data-tab="${tabName}"]`);
+    if (btn) {
+        btn.classList.add('active', 'text-white', 'bg-purple-600');
+        btn.classList.remove('text-gray-400');
+    }
+}
+
+function copyAll() {
+    let text = '📚 DOCUMENTATION SIMPLIFIED\n';
+    text += '=' .repeat(40) + '\n\n';
+
+    const sections = {
+        tldr: '⚡ TL;DR',
+        superpowers: '💪 What You Can Do',
+        quick_start: '🏁 Quick Start',
+        video_magic: '💡 Use Cases',
+        viral_features: '✨ Best Features',
+        money_talk: '💰 Pricing',
+        watch_out: '⚠️ Watch Out',
+        ship_today: '🚀 Try Today'
+    };
+
+    Object.keys(sections).forEach(key => {
+        if (rawContent[key]) {
+            text += sections[key] + '\n' + '-'.repeat(20) + '\n';
+            text += rawContent[key] + '\n\n';
+        }
+    });
+
+    navigator.clipboard.writeText(text).then(() => {
+        alert('✅ Copied to clipboard!');
+    });
+}
+</script>
+{% endblock %}
