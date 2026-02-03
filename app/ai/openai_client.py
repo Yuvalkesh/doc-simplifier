@@ -8,7 +8,7 @@ load_dotenv()
 
 class OpenAIClient:
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.api_key = os.getenv("OPENAI_API_KEY", "").strip()
         if not self.api_key:
             raise ValueError("OPENAI_API_KEY not found in environment")
         print(f"[DEBUG] OpenAI API key loaded: {self.api_key[:10]}...")
