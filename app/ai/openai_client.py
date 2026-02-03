@@ -12,19 +12,26 @@ class OpenAIClient:
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("OPENAI_API_KEY not found in environment")
-        # Log key prefix for debugging (safe - only shows first chars)
         print(f"[DEBUG] OpenAI API key loaded: {api_key[:10]}...")
-        self.client = AsyncOpenAI(api_key=api_key, timeout=30.0)
-        self.model = os.getenv("OPENAI_MODEL", "gpt-4o")
+        # Use shorter timeout for serverless, with retries disabled
+        self.client = AsyncOpenAI(
+            api_key=api_key,
+            timeout=20.0,
+            max_retries=0  # Don't retry - serverless timeout is limited
+        )
+        # Use gpt-4o-mini for faster responses in serverless
+        self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
         print(f"[DEBUG] Using model: {self.model}")
 
     async def generate_report(self, content: str, chunks: list, progress_callback: Optional[Callable] = None) -> dict:
         sections = {}
-        truncated = content[:8000]
-        tasks = [self._gen_section(name, truncated) for name in SECTION_PROMPTS.keys()]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        for name, result in zip(SECTION_PROMPTS.keys(), results):
-            sections[name] = result if not isinstance(result, Exception) else f"😅 Error: {str(result)[:80]}"
+        truncated = content[:6000]  # Smaller content for faster processing
+        # Process sequentially to avoid overwhelming the connection
+        for name in SECTION_PROMPTS.keys():
+            try:
+                sections[name] = await self._gen_section(name, truncated)
+            except Exception as e:
+                sections[name] = f"😅 Error: {type(e).__name__}: {str(e)[:60]}"
         return sections
 
     async def _gen_section(self, name: str, content: str) -> str:
